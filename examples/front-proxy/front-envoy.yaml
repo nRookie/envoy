@@ -20,6 +20,14 @@ static_resources:
               routes:
               - match:
                   prefix: "/service/1"
+                  headers:
+                    - name: "x-canary-version"
+                      string_match:
+                        exact: "service1a"
+                route:
+                  cluster: service1a
+              - match:
+                  prefix: "/service/1"
                 route:
                   cluster: service1
               - match:
@@ -49,6 +57,14 @@ static_resources:
               domains:
               - "*"
               routes:
+              - match:
+                  prefix: "/service/1"
+                  headers:
+                    - name: "x-canary-version"
+                      string_match:
+                        exact: "service1a"
+                route:
+                  cluster: service1a
               - match:
                   prefix: "/service/1"
                 route:
@@ -151,11 +167,23 @@ static_resources:
               socket_address:
                 address: service2
                 port_value: 8000
+  - name: service1a
+    type: STRICT_DNS
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: service1a
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: service1a
+                port_value: 8000
 admin:
   address:
     socket_address:
       address: 0.0.0.0
-      port_value: 8001
+      port_value: 8009
 layered_runtime:
   layers:
   - name: static_layer_0
