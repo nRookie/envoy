@@ -29,7 +29,12 @@ static_resources:
               - match:
                   prefix: "/service/1"
                 route:
-                  cluster: service1
+                  weighted_clusters:
+                    clusters:
+                      - name: service1a
+                        weight: 25
+                      - name: service1
+                        weight: 75 
               - match:
                   prefix: "/service/2"
                 route:
